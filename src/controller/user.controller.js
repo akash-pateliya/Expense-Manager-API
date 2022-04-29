@@ -14,3 +14,17 @@ exports.register = async (req, res) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
   }
 };
+
+exports.login = async (req, res) => {
+  try {
+    if (!Object.keys(req.body).length || req.body?.username || req.body?.password) {
+      return res.status(StatusCodes.BAD_REQUEST).send({
+        message: "Please provide username or passoword !!"
+      });
+    }
+    const result = await new userBLL().loginUser(req.body.username, req.body.password);
+    return res.status(StatusCodes.OK).send(result);
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+  }
+}

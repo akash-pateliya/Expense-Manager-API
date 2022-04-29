@@ -1,6 +1,8 @@
 const User = require('../model/user.model');
 const bcrypt = require('bcrypt');
 const errorLogBLL = require('./error-log.bll');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 class userBLL {
     async registerUser(userObj) {
@@ -34,12 +36,53 @@ class userBLL {
         }
     }
 
+    async loginUser(username, password){
+        const existingUser = await User.findByUsername(username);
+        if(existingUser){
+            const isPasswordValid = bcrypt.compare(password, existingUser.password);
+            return {
+                status : isPasswordValid,
+                message : isPasswordValid ? 'Login Successfull !!' : 'Invalid Password !!',
+                token : isPasswordValid ? await this.generateToken(username) : null
+            }
+        }
+        return {status : false, message : 'Invalid username !!'};
+    }
     async encryptPassword(password) {
         try {
             const encrypt = await bcrypt.hash(password, 10);
             return encrypt;
         } catch (error) {
             await new errorLogBLL().logError('userBLL', 'encryptPassword', error);
+            return {
+                status: false,
+                error: error.message
+            }
+        }
+    }
+
+    async generateToken(username){
+        try {
+            const token = await jwt.sign({username : username}, process.env.SECRET_KEY);
+            return token;
+        } catch (error) {
+            await new errorLogBLL().logError('userBLL', 'generateToken', error);
+            return {
+                status: false,
+                error: error.message
+            }
+        }
+    }
+
+    async verifyToken(token){
+        try {
+            const decode = jwt.verify(token, process.env.SECRET_KEY);
+            return {
+                status : decode?.username,
+                username : decode?.username
+            }
+        } catch (error) {
+            await new errorLogBLL().logError('userBLL', 'verifyToken', error);
             return {
                 status: false,
                 error: error.message
