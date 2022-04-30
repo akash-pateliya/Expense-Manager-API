@@ -37,16 +37,25 @@ class userBLL {
     }
 
     async loginUser(username, password){
-        const existingUser = await User.findByUsername(username);
-        if(existingUser){
-            const isPasswordValid = await bcrypt.compare(password, existingUser.password);
-            return {
-                status : isPasswordValid,
-                message : isPasswordValid ? 'Login Successfull !!' : 'Invalid Password !!',
-                token : isPasswordValid ? await this.generateToken(username) : null
+        try {
+            const existingUser = await User.findByUsername(username);
+            if(existingUser){
+                const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+                return {
+                    status : isPasswordValid,
+                    message : isPasswordValid ? 'Login Successfull !!' : 'Invalid Password !!',
+                    username : username,
+                    token : isPasswordValid ? await this.generateToken(username) : null
+                }
             }
+            return {status : false, message : 'Invalid username !!'};
+        } catch (error) {
+            await new errorLogBLL().logError('userBLL', 'encryptPassword', error);
+            return {
+                status: false,
+                message: error.message
+            }            
         }
-        return {status : false, message : 'Invalid username !!'};
     }
     async encryptPassword(password) {
         try {
@@ -88,6 +97,14 @@ class userBLL {
                 error: error.message
             }
         }
+    }
+
+    async validateUser(token, username){
+        const result = await this.verifyToken(token);
+        if(result.status){
+            return username == result.username;
+        }
+        return false;
     }
 }
 

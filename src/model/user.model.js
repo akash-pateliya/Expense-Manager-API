@@ -13,7 +13,6 @@ User.register = async (newUser) => {
   try {
     const res = await sql.query("INSERT INTO users SET ?", newUser);
     return { status: true, result: { userId: res.insertId, ...newUser } };
-
   } catch (error) {
     await new errorLogBLL().logError('user.model', 'User.register', error);
     return {
