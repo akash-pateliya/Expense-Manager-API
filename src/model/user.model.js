@@ -25,9 +25,9 @@ User.register = async (newUser) => {
 
 User.findByUsername = async (username) => {
   try {
-    const res = await sql.query(`SELECT * FROM users WHERE username = '${username}'`)
-    if (res.length) {
-      return res[0];
+    const res = await sql.execute('select * from users where username = ?', [username]);
+    if (res[0].length > 0) {
+      return res[0][0];
     }
     return null;
   } catch (error) {
@@ -41,9 +41,9 @@ User.findByUsername = async (username) => {
 
 User.findByEmail = async (email) => {
   try {
-    const res = await sql.query(`SELECT * FROM users WHERE email = '${email}'`)
-    if (res.length) {
-      return res[0];
+    const res = await sql.execute('select * from users where email = ?', [email]);
+    if (res[0].length) {
+      return res[0][0];
     }
     return null;
   } catch (error) {

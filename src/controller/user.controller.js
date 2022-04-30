@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    if (!Object.keys(req.body).length || req.body?.username || req.body?.password) {
+    if (!Object.keys(req.body).length || !req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password')) {
       return res.status(StatusCodes.BAD_REQUEST).send({
         message: "Please provide username or passoword !!"
       });

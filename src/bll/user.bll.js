@@ -39,7 +39,7 @@ class userBLL {
     async loginUser(username, password){
         const existingUser = await User.findByUsername(username);
         if(existingUser){
-            const isPasswordValid = bcrypt.compare(password, existingUser.password);
+            const isPasswordValid = await bcrypt.compare(password, existingUser.password);
             return {
                 status : isPasswordValid,
                 message : isPasswordValid ? 'Login Successfull !!' : 'Invalid Password !!',
