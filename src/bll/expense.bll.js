@@ -1,6 +1,7 @@
 const errorLogBLL = require('./error-log.bll');
 const Expense = require('../model/expense.model');
-
+const userBLL = require('./user.bll');
+const User = require('../model/user.model');
 
 class expenseBLL {
     async addExpense(expenseObj) {
@@ -19,6 +20,23 @@ class expenseBLL {
             return result;
         } catch (error) {
             await new errorLogBLL().logError('expenseBLL', 'addExpense', error);
+            return {
+                status: false,
+                error: error.message
+            }
+        }
+    }
+
+    async getExpense(expenseObj){
+        try {
+            const user = await User.findByUsername(expenseObj.username);
+            const result = await Expense.findByCreater(user.userId);
+            return {
+                status : true,
+                result : result
+            };
+        } catch (error) {
+            await new errorLogBLL().logError('expenseBLL', 'getExpense', error);
             return {
                 status: false,
                 error: error.message

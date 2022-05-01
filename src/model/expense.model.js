@@ -1,13 +1,13 @@
 const sql = require("./db.js");
 
-const Expense = function(expenseObj) {
-  this.expenseDate = expenseObj.expenseDate;
-  this.amount = expenseObj.amount;
-  this.currency = expenseObj.currency;
-  this.category_id = expenseObj.category_id;
-  this.description = expenseObj.description;
-  this.createdBy = expenseObj.createdBy;
-  this.createdAt = expenseObj.createdAt;
+const Expense = function (expenseObj) {
+    this.expenseDate = expenseObj.expenseDate;
+    this.amount = expenseObj.amount;
+    this.currency = expenseObj.currency;
+    this.category_id = expenseObj.category_id;
+    this.description = expenseObj.description;
+    this.createdBy = expenseObj.createdBy;
+    this.createdAt = expenseObj.createdAt;
 };
 
 Expense.insert = async (expenseObj) => {
@@ -23,4 +23,20 @@ Expense.insert = async (expenseObj) => {
     }
 };
 
-module.exports = ErrorLog;
+Expense.findByCreater = async (createdBy) => {
+    try {
+        const res = await sql.query("select * from expenses where createdBy = ? and isDeleted <> 1", [createdBy]);
+        if (res[0].length > 0) {
+            return res[0];
+        }
+        return null;
+    } catch (error) {
+        await new errorLogBLL().logError('expense.model', 'Expense.findByCreater', error);
+        return {
+            status: false,
+            error: error.message
+        }
+    }
+}
+
+module.exports = Expense;
