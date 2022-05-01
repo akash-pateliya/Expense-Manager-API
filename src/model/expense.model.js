@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const errorLogBLL = require('../bll/error-log.bll');
 
 const Expense = function (expenseObj) {
     this.expenseDate = expenseObj.expenseDate;
@@ -25,7 +26,7 @@ Expense.insert = async (expenseObj) => {
 
 Expense.findByCreater = async (createdBy) => {
     try {
-        const res = await sql.query("select * from expenses where createdBy = ? and isDeleted <> 1", [createdBy]);
+        const res = await sql.query("select * from expenses where createdBy = ? and isDeleted is null", [createdBy]);
         if (res[0].length > 0) {
             return res[0];
         }

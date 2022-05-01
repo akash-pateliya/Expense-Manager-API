@@ -1,18 +1,18 @@
 const errorLogBLL = require('./error-log.bll');
 const Expense = require('../model/expense.model');
-const userBLL = require('./user.bll');
 const User = require('../model/user.model');
 
 class expenseBLL {
     async addExpense(expenseObj) {
         try {
+            const user = await User.findByUsername(expenseObj.username);
             const expense = new Expense({
-                expenseDate : expenseObj.expenseDate,
+                expenseDate : new Date(expenseObj.expenseDate),
                 amount : expenseObj.amount,
                 currency : expenseObj.currency,
                 category_id : expenseObj.category_id,
                 description : expenseObj.description,
-                createdBy : expenseObj.createdBy,
+                createdBy : user.userId,
                 createdAt : new Date(),
             });
 

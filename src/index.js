@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 require('./routes/user.routes')(app);
-
+require('./routes/expense.routes')(app);
 app.listen(process.env.NODE_PORT, () => {
     console.log("Server is listening on port ",process.env.NODE_PORT);
 });
