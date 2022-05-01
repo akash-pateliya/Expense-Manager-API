@@ -22,14 +22,14 @@ exports.insert = async (req, res) => {
 
 exports.get = async (req, res) => {
     try {
-        if (!Object.keys(req.body).length) {
+        if (!Object.keys(req.query).length) {
             return res.status(StatusCodes.BAD_REQUEST).send({
                 message: "Content can not be empty!"
             });
         }
-        const isValid = await new userBLL().validateUser(req.body.token, req.body.username);
+        const isValid = await new userBLL().validateUser(req.query.token, req.query.username);
         if (isValid) {
-            const result = await new expenseBLL().getExpense(req.body);
+            const result = await new expenseBLL().getExpense(req.query);
             return res.status(StatusCodes.OK).send(result);
         }
         return res.status(StatusCodes.UNAUTHORIZED).send({ status: false, message: 'Not Authorised !!' })

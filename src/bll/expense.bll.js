@@ -31,6 +31,9 @@ class expenseBLL {
         try {
             const user = await User.findByUsername(expenseObj.username);
             const result = await Expense.findByCreater(user.userId);
+            result.forEach(ele => {
+                ele.expenseDate =  ele.expenseDate.getDate() + '/' + ele.expenseDate.getMonth() + '/' + ele.expenseDate.getFullYear();
+            })
             return {
                 status : true,
                 result : result
