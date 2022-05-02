@@ -6,9 +6,9 @@ class errorLogBLL {
     async logError(className, methodName, error) {
         try {
             const errorLog = new ErrorLog({
-                className : className,
-                methodName : methodName,
-                error : error,
+                className: className,
+                methodName: methodName,
+                error: error,
             });
 
             await ErrorLog.logError(errorLog);

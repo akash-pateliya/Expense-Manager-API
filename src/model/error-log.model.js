@@ -1,7 +1,6 @@
 const sql = require("./db.js");
 
-// constructor
-const ErrorLog = function(errorLog) {
+const ErrorLog = function (errorLog) {
   this.className = errorLog.className;
   this.methodName = errorLog.methodName;
   this.error = errorLog.error;

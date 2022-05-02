@@ -36,25 +36,25 @@ class userBLL {
         }
     }
 
-    async loginUser(username, password){
+    async loginUser(username, password) {
         try {
             const existingUser = await User.findByUsername(username);
-            if(existingUser){
+            if (existingUser) {
                 const isPasswordValid = await bcrypt.compare(password, existingUser.password);
                 return {
-                    status : isPasswordValid,
-                    message : isPasswordValid ? 'Login Successfull !!' : 'Invalid Password !!',
-                    username : username,
-                    token : isPasswordValid ? await this.generateToken(username) : null
+                    status: isPasswordValid,
+                    message: isPasswordValid ? 'Login Successfull !!' : 'Invalid Password !!',
+                    username: username,
+                    token: isPasswordValid ? await this.generateToken(username) : null
                 }
             }
-            return {status : false, message : 'Invalid username !!'};
+            return { status: false, message: 'Invalid username !!' };
         } catch (error) {
             await new errorLogBLL().logError('userBLL', 'encryptPassword', error);
             return {
                 status: false,
                 message: error.message
-            }            
+            }
         }
     }
     async encryptPassword(password) {
@@ -70,9 +70,9 @@ class userBLL {
         }
     }
 
-    async generateToken(username){
+    async generateToken(username) {
         try {
-            const token = await jwt.sign({username : username}, process.env.SECRET_KEY);
+            const token = await jwt.sign({ username: username }, process.env.SECRET_KEY);
             return token;
         } catch (error) {
             await new errorLogBLL().logError('userBLL', 'generateToken', error);
@@ -83,12 +83,12 @@ class userBLL {
         }
     }
 
-    async verifyToken(token){
+    async verifyToken(token) {
         try {
             const decode = jwt.verify(token, process.env.SECRET_KEY);
             return {
-                status : decode?.username,
-                username : decode?.username
+                status: decode?.username,
+                username: decode?.username
             }
         } catch (error) {
             await new errorLogBLL().logError('userBLL', 'verifyToken', error);
@@ -99,9 +99,9 @@ class userBLL {
         }
     }
 
-    async validateUser(token, username){
+    async validateUser(token, username) {
         const result = await this.verifyToken(token);
-        if(result.status){
+        if (result.status) {
             return username == result.username;
         }
         return false;

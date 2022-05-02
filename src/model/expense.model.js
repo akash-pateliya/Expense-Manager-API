@@ -61,7 +61,7 @@ Expense.findAmountSpentPerCategory = async (createdBy) => {
     GROUP BY category_name`
 
     const res = await sql.query(sqlQuery);
-    if(res[0].length > 0){
+    if (res[0].length > 0) {
         return res[0];
     }
     return null;

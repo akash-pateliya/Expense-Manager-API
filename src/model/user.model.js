@@ -1,7 +1,6 @@
 const errorLogBLL = require("../bll/error-log.bll.js");
 const sql = require("./db.js");
 
-// constructor
 const User = function (user) {
   this.fullName = user.fullName;
   this.userName = user.userName;

@@ -7,13 +7,13 @@ class expenseBLL {
         try {
             const user = await User.findByUsername(expenseObj.username);
             const expense = new Expense({
-                expenseDate : new Date(expenseObj.expenseDate),
-                amount : expenseObj.amount,
-                currency : expenseObj.currency,
-                category_id : expenseObj.category_id,
-                description : expenseObj.description,
-                createdBy : user.userId,
-                createdAt : new Date(),
+                expenseDate: new Date(expenseObj.expenseDate),
+                amount: expenseObj.amount,
+                currency: expenseObj.currency,
+                category_id: expenseObj.category_id,
+                description: expenseObj.description,
+                createdBy: user.userId,
+                createdAt: new Date(),
             });
 
             const result = await Expense.insert(expense);
@@ -27,16 +27,16 @@ class expenseBLL {
         }
     }
 
-    async getExpense(username){
+    async getExpense(username) {
         try {
             const user = await User.findByUsername(username);
             const result = await Expense.findByCreater(user.userId);
             result.forEach(ele => {
-                ele.expenseDate =  ele.expenseDate.getDate() + '/' + ele.expenseDate.getMonth() + '/' + ele.expenseDate.getFullYear();
+                ele.expenseDate = ele.expenseDate.getDate() + '/' + ele.expenseDate.getMonth() + '/' + ele.expenseDate.getFullYear();
             })
             return {
-                status : true,
-                result : result
+                status: true,
+                result: result
             };
         } catch (error) {
             await new errorLogBLL().logError('expenseBLL', 'getExpense', error);
