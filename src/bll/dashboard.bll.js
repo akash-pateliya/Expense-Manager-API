@@ -8,7 +8,7 @@ class dashboardBLL {
             const lastFiveExpenseArr = await this.getLastFiveExpense(username);
 
             const result = {
-                status : true,
+                status: true,
                 totalAmount: totalAmount,
                 lastFiveExpenses: lastFiveExpenseArr
             }

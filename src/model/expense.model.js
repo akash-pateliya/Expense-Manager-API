@@ -40,4 +40,31 @@ Expense.findByCreater = async (createdBy) => {
     }
 }
 
+Expense.findAmountSpentPerWeek = async (createdBy) => {
+    const sqlQuery = `SELECT FLOOR((DAYOFMONTH(CURRENT_DATE()) - 1) / 7) + 1 AS week_of_month, sum(amount) 
+    FROM EXPENSES
+    WHERE month(expenseDate) = month(curdate()) and createdBy = ${createdBy}
+    GROUP BY week_of_month`;
+
+    const res = await sql.query(sqlQuery);
+    if (res[0].length > 0) {
+        return res[0];
+    }
+    return null;
+}
+
+Expense.findAmountSpentPerCategory = async (createdBy) => {
+    const sqlQuery = `SELECT category_name, sum(amount)
+    FROM expenses exp
+    INNER JOIN lib_categories lc on lc.id = exp.id
+    WHERE month(expenseDate) = month(curdate()) and exp.createdBy = ${createdBy}
+    GROUP BY category_name`
+
+    const res = await sql.query(sqlQuery);
+    if(res[0].length > 0){
+        return res[0];
+    }
+    return null;
+}
+
 module.exports = Expense;
