@@ -27,9 +27,9 @@ class expenseBLL {
         }
     }
 
-    async getExpense(expenseObj){
+    async getExpense(username){
         try {
-            const user = await User.findByUsername(expenseObj.username);
+            const user = await User.findByUsername(username);
             const result = await Expense.findByCreater(user.userId);
             result.forEach(ele => {
                 ele.expenseDate =  ele.expenseDate.getDate() + '/' + ele.expenseDate.getMonth() + '/' + ele.expenseDate.getFullYear();

@@ -29,7 +29,7 @@ exports.get = async (req, res) => {
         }
         const isValid = await new userBLL().validateUser(req.query.token, req.query.username);
         if (isValid) {
-            const result = await new expenseBLL().getExpense(req.query);
+            const result = await new expenseBLL().getExpense(req.query.username);
             return res.status(StatusCodes.OK).send(result);
         }
         return res.status(StatusCodes.UNAUTHORIZED).send({ status: false, message: 'Not Authorised !!' })

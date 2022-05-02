@@ -26,7 +26,7 @@ Expense.insert = async (expenseObj) => {
 
 Expense.findByCreater = async (createdBy) => {
     try {
-        const res = await sql.query("select expenseDate,amount,currency,description,category_name from expenses join lib_categories on lib_categories.id = expenses.category_id where expenses.createdBy = ? and expenses.isDeleted is null", [createdBy]);
+        const res = await sql.query("select expenseDate,amount,currency,description,category_name from expenses join lib_categories on lib_categories.id = expenses.category_id where expenses.createdBy = ? and expenses.isDeleted is null order by expenses.createdAt desc", [createdBy]);
         if (res[0].length > 0) {
             return res[0];
         }
